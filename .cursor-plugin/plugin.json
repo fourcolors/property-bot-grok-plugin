@@ -1,0 +1,20 @@
+{
+  "name": "property-bot",
+  "version": "0.1.0",
+  "description": "Find room and roommate matches, save your housing preferences, and manage your own Property Bot profile.",
+  "author": {
+    "name": "Property Bot"
+  },
+  "homepage": "https://property.bot",
+  "repository": "https://github.com/fourcolors/property-bot-grok-plugin",
+  "license": "MIT",
+  "keywords": [
+    "housing",
+    "roommates",
+    "rooms",
+    "property-bot"
+  ],
+  "logo": "assets/icon.svg",
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json"
+}

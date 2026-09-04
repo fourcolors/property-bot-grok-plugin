@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <rect width="1024" height="1024" fill="#0B1220"/>
+  <path fill-rule="evenodd" d="
+    M 144,792
+    L 144,396
+    L 496,216
+    L 496,512
+    L 280,512
+    L 280,792
+    Z
+    M 280,396
+    L 396,336
+    L 396,436
+    L 280,436
+    Z
+  " fill="#F4EFE6"/>
+  <path fill-rule="evenodd" d="
+    M 528,216
+    L 880,396
+    L 880,792
+    L 528,792
+    Z
+    M 628,436
+    L 628,336
+    L 744,396
+    L 744,436
+    Z
+    M 628,704
+    L 628,576
+    L 744,576
+    L 744,704
+    Z
+  " fill="#2A9D8F"/>
+</svg>
