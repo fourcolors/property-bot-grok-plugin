@@ -1,5 +1,11 @@
 # Property Bot for Grok Bot
 
+This **public** repository is the agent/plugin surface for [property.bot](https://property.bot):
+Cursor/Grok plugin layout, [Agent Plugins](https://agent-plugins.org/specification)
+discovery (`plugin.json`, `mcp.json`, `skills/`), and [`AGENTS.md`](./AGENTS.md) for
+AI agents that consume the product. The Property Bot **application source is private**;
+this repo is not that codebase.
+
 Initial plugin package for personal housing and roommate searches. It contains
 an OAuth MCP connection and the `/property-bot` skill. No API key, local server,
 package install, or service credential is required by the package.
@@ -8,14 +14,16 @@ package install, or service credential is required by the package.
 
 This is a development package, not a published marketplace listing. It uses the
 Cursor plugin manifest because Grok Bot's documented connector system uses the
-Cursor marketplace and account infrastructure. Grok Bot installation and a full
-signed-in conversation still need validation in the target app. This is not a
-Grok Build CLI plugin or an xAI Responses API integration.
+Cursor marketplace and account infrastructure. Root `plugin.json` follows the
+Agent Plugins specification so portable clients can discover the same skills and
+MCP entry. Grok Bot installation and a full signed-in conversation still need
+validation in the target app. This is not a Grok Build CLI plugin or an xAI
+Responses API integration.
 
 This repository contains only the plugin package, including its hidden
-`.cursor-plugin` directory. The only configured server is `https://mcp.property.bot/mcp`.
-OAuth tokens belong in the host's credential store. No custom headers or
-user-supplied phone binding belong in `mcp.json`.
+`.cursor-plugin` directory. The only configured server is `https://mcp.property.bot/mcp`
+(OAuth-gated product MCP). OAuth tokens belong in the host's credential store.
+No custom headers or user-supplied phone binding belong in `mcp.json`.
 
 ## Develop locally
 
