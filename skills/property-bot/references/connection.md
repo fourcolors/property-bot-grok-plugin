@@ -10,12 +10,26 @@ let the user finish in their browser. Never ask for access tokens or passwords
 in chat, copy credentials into files, or fall back to trusted-runtime headers.
 If the host cannot complete discovery or authentication, report the exact stage
 that failed without tokens, cookies, or personal data. Offer the human route
-from https://property.bot/auth.md while the connector is unavailable.
+from https://property.bot/auth.md while the connector is unavailable. That page
+may list public product voice/WhatsApp lines in full; this package keeps last-4
+only. Never ask a user to paste a Bearer token or set `PROPERTYBOT_MCP_TOKEN` /
+`MCP_BEARER_TOKEN` in chat — those names on auth.md are CLI-only legacy.
+
+After OAuth, call `connection_status` with `{}` before `lookup_person`.
+
+- Read `phone_linked` and `verification_methods` (OTP and, when advertised,
+  `whatsapp_inbound`).
+- If `phone_linked` is true, skip verification. Call `lookup_person` with `{}`
+  and read saved preferences before asking the user to repeat them.
+- If `phone_linked` is false, continue below after `phone_verification_required`
+  or an explicit request to link a phone. Use an advertised method from
+  `verification_methods`; do not invent one.
 
 ## Link a phone
 
-Only start this flow after `phone_verification_required` or an explicit request
-to link a phone. Linking can associate existing housing records with this account.
+Linking can associate existing housing records with this account. Only link the
+user's own number. Never infer ownership from a supplied number, bind another
+person's phone, or look that person up.
 
 1. Before sending any code, confirm that this host can collect a secret outside
    ordinary chat and pass it directly to `confirm_phone_verification`. A generic
@@ -23,16 +37,31 @@ to link a phone. Linking can associate existing housing records with this accoun
    unknown, stop before sending and explain that phone linking needs a supported
    client. Do not claim the account is linked.
 2. Ask for the user's own phone number and their preferred `sms` or `whatsapp`
-   delivery channel. Explain that the next action sends a verification code.
+   delivery channel. Explain that the next action starts verification.
    Proceed when they request that send. Current support is +1 US/Canada numbers.
-3. Call `start_phone_verification` with `phone` in E.164 and `channel`.
+3. If `connection_status.verification_methods` includes `whatsapp_inbound` and
+   the user is linking WhatsApp, call `start_phone_verification` with `phone`,
+   `channel: "whatsapp"`, and `method: "whatsapp_inbound"`. Show the returned
+   WhatsApp link and message. The user must send that message themselves; never
+   send or forward it for them, and never ask them to paste a linking command
+   into ordinary chat. After they explicitly agree that this number should be
+   linked to their signed-in property.bot account, call
+   `confirm_phone_verification` with `method: "whatsapp_inbound"` and
+   `confirm: true`. A received message alone does not finish linking. After
+   confirmation, property.bot may send one linked-account notice as a WhatsApp
+   reply. Do not ask users to forward another person's linking message. If
+   OTP delivery is unavailable, use advertised `whatsapp_inbound`; do not
+   switch a WhatsApp identity to SMS.
+4. For OTP, call `start_phone_verification` with `phone` in E.164 and `channel`.
    Read the returned `channel`, `forced_whatsapp`, and `expires_at`; a known
    WhatsApp number may receive the code there even when SMS was requested.
-4. Use the host's secure input mechanism for the six-digit code if available.
+   Existing WhatsApp identities require WhatsApp verification. Do not switch
+   the identity to SMS to work around delivery.
+5. Use the host's secure input mechanism for the six-digit code if available.
    If it cannot pass the code securely to the verification tool, pause linking
    and report that secure verification needs a supported client. Do not solicit
    a code in ordinary chat, guess it, or read unrelated messages to obtain it.
-5. Call `confirm_phone_verification` with `code`. After a successful result,
+6. Call `confirm_phone_verification` with `code`. After a successful result,
    retry `lookup_person` with `{}` and resume the original task.
 
 Respect rate limits and expiry messages. Resend only at the user's request;

@@ -2,7 +2,7 @@
 
 This repository is the **public agent and plugin surface** for [property.bot](https://property.bot). It ships Cursor/Grok plugin metadata, Agent Plugins discovery (`plugin.json`, `mcp.json`, `skills/`), and this brief.
 
-It is **not** the private Property Bot application source. Do not treat this repo as the Worker, D1, or matching-service codebase. Application implementation stays private.
+It is **not** the private property.bot application source. Do not treat this repo as the Worker, D1, or matching-service codebase. Application implementation stays private.
 
 Spoken name: **PropertyBot**. Prefer lowercase **property.bot** in written UI/docs copy.
 
@@ -19,7 +19,9 @@ Conversation is the product. Prefer WhatsApp for people. Voice/SMS is secondary.
 | WhatsApp | …0663 | Primary human path |
 | Voice / SMS (Telnyx) | …1919 | Secondary voice / SMS |
 
-Do not invent full phone numbers, paste other people’s numbers, or invent alternate contact paths. For human contact and erasure, follow [auth.md](https://property.bot/auth.md) and [contact](https://property.bot/contact).
+Do not invent full phone numbers, paste other people’s numbers, or invent alternate contact paths. For human contact and erasure, follow [auth.md](https://property.bot/auth.md) and [contact](https://property.bot/contact). `auth.md` may show public product voice/WhatsApp lines in full; this package keeps last-4 only.
+
+Connector hosts must use host-managed OAuth. Never ask users to paste Bearer tokens or set `PROPERTYBOT_MCP_TOKEN` / `MCP_BEARER_TOKEN` in chat. Treat any Bearer-paste or env-token language on `auth.md` as CLI-only legacy, not this plugin.
 
 ## MCP surfaces (do not collapse them)
 
@@ -31,7 +33,7 @@ Do not invent full phone numbers, paste other people’s numbers, or invent alte
 
 Host-managed OAuth belongs in the client credential store. Never invent shared secrets, API keys, bearer tokens, or trusted-runtime phone headers. Never ask users to paste access tokens into chat.
 
-This package’s `mcp.json` points at the product MCP URL for connector hosts. Authorization discovery and token storage are client-managed (see [auth.md](https://property.bot/auth.md)).
+This package’s `mcp.json` points at the product MCP URL for connector hosts. Authorization discovery and token storage are client-managed (see [auth.md](https://property.bot/auth.md)). Hosts use OAuth in the credential store — never paste a Bearer token or set `PROPERTYBOT_MCP_TOKEN` / `MCP_BEARER_TOKEN` in chat; that auth.md language is CLI-only legacy.
 
 ## Privacy
 
@@ -39,16 +41,21 @@ This package’s `mcp.json` points at the product MCP URL for connector hosts. A
 - Match cards from product MCP are redacted (city, budget band, side, first name). Never invent last names, street addresses, or phones.
 - There is no public people-search API. Do not invent list-all, lookup-by-arbitrary-phone, or scrapers.
 - Docs MCP must remain documentation-only — no PII tooling.
+- Product MCP `send_text` delivers Telnyx SMS to the signed-in caller's linked phone only (`messages:send` for registered agents). It is not a people-search or introduction tool.
+- Live schemas are authoritative. The product card currently lists `connection_status`, `lookup_person`, `remember_person`, `find_matches`, `send_text`, `start_phone_verification`, `confirm_phone_verification`, `list_agent_connections`, and `disconnect_agent`. After OAuth, call `connection_status` first (`phone_linked`, `verification_methods` including `whatsapp_inbound`). `disconnect_agent` does not revoke this package's OAuth connector tokens.
 
 ## Canonical links
 
 | Resource | URL |
 | --- | --- |
 | Home | https://property.bot |
-| Auth contract | https://property.bot/auth.md |
+| Auth contract | https://property.bot/auth.md (host OAuth only; Bearer paste / `PROPERTYBOT_MCP_TOKEN` / `MCP_BEARER_TOKEN` are CLI-only legacy; last-4 in this package) |
+| Connect an agent | https://property.bot/connect.md |
+| Product MCP card | https://property.bot/.well-known/mcp/product-server-card.json |
 | OpenAPI (public health/info) | https://property.bot/openapi.json |
 | Agent brief | https://property.bot/llms.txt |
 | Privacy | https://property.bot/privacy |
+| Contact | https://property.bot/contact |
 | Developers | https://property.bot/developers |
 | Docs | https://property.bot/docs |
 
