@@ -1,25 +1,31 @@
 ---
 name: property-bot
-description: Find rooms or roommates through Property Bot, update the user's housing preferences, or close their housing search. Use when the user asks to use Property Bot or manage their own Property Bot profile.
+description: Find rooms or roommates through property.bot (spoken: PropertyBot), update the signed-in user's housing preferences, or close their search. Use when the user asks for PropertyBot, property.bot, or to manage their own housing profile.
+license: MIT
 ---
 
-# Property Bot
+# property.bot
 
-Use the connected Property Bot MCP tools for the signed-in user's own housing
-search. Read the live tool schemas before calling them. Keep the conversation
-brief; ask one useful question at a time and preserve facts already supplied.
+Use the connected property.bot MCP tools for the signed-in user's own housing
+search. Spoken name: PropertyBot. Read the live tool schemas before calling
+them. Keep the conversation brief; ask one useful question at a time and
+preserve facts already supplied.
 
 ## Connect and load
 
-1. Discover the Property Bot connector tools. If unavailable, ask the user to
-   connect Property Bot and complete the connector's browser OAuth flow. For
+1. Discover the property.bot connector tools. If unavailable, ask the user to
+   connect property.bot and complete the connector's browser OAuth flow. For
    connection errors or phone verification, read [connection.md](references/connection.md).
-2. Call `lookup_person` with `{}`. The server identifies the user from their
-   account and linked phone. Never supply `X-Caller-Phone`, `From`, a shared
-   service token, or another person's identity to select an account.
-3. If `phone_verification_required` is returned, follow the connection reference
-   and retry only after verification succeeds. An empty profile is different
-   from an authentication failure.
+2. After OAuth, call `connection_status` with `{}` if that tool is present.
+   If `phone_linked` is true, skip verification. Never supply `X-Caller-Phone`,
+   `From`, a shared service token, or another person's identity to select an
+   account.
+3. Call `lookup_person` with `{}`. The server identifies the user from their
+   account and linked phone.
+4. If `phone_verification_required` is returned, or `connection_status` shows
+   the phone is not linked, follow the connection reference and retry only after
+   verification succeeds. An empty profile is different from an authentication
+   failure.
 
 ## Find or update housing
 
@@ -52,9 +58,15 @@ to send an introduction or contact a match.
 - On a request to stop the search, call `remember_person` with
   `{"close_need": true}`. Confirm closure only when the result confirms it.
   Closing a search does not erase the profile.
-- `send_text` creates a local record only. Use it only if the user wants that
-  record saved, with `{"body": "..."}`; report it as saved, never as an SMS sent.
-  For a request to text or contact someone, explain this limitation.
+- `send_text` sends a real SMS to the signed-in user's linked phone only.
+  Call it only when they explicitly ask to text themselves. Never put match
+  PII in the body. It cannot contact a match. Registered agents need
+  `messages:send`. If the tool is denied or missing, explain that; do not
+  invent delivery.
+- `list_agent_connections` and `disconnect_agent` manage registered-agent
+  access for this OAuth user. They do not revoke this connector's tokens —
+  remove the connection in the host's plugin settings. Do not call them unless
+  the user asks to list or disconnect a registration.
 - Erasure is unavailable to the user-class connector. On an erasure request,
   read the current human contact path at https://property.bot/auth.md and direct
   the user there. Do not substitute `close_need` or attempt `delete_person`.
@@ -64,5 +76,6 @@ to send an introduction or contact a match.
 Report what was found or successfully changed and the next useful step. Inspect
 both MCP `isError` and payload error codes before claiming success. If a write
 times out, check the user's current profile before retrying; never blindly repeat
-a verification send or local-message write. Do not claim a reservation, outbound
-message, deletion, or successful save without a confirming tool result.
+a verification send or SMS write. Do not claim a reservation, outbound
+message to anyone else, deletion, or successful save without a confirming
+tool result.

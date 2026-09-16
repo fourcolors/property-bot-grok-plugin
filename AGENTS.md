@@ -2,7 +2,7 @@
 
 This repository is the **public agent and plugin surface** for [property.bot](https://property.bot). It ships Cursor/Grok plugin metadata, Agent Plugins discovery (`plugin.json`, `mcp.json`, `skills/`), and this brief.
 
-It is **not** the private Property Bot application source. Do not treat this repo as the Worker, D1, or matching-service codebase. Application implementation stays private.
+It is **not** the private property.bot application source. Do not treat this repo as the Worker, D1, or matching-service codebase. Application implementation stays private.
 
 Spoken name: **PropertyBot**. Prefer lowercase **property.bot** in written UI/docs copy.
 
@@ -39,6 +39,8 @@ This package’s `mcp.json` points at the product MCP URL for connector hosts. A
 - Match cards from product MCP are redacted (city, budget band, side, first name). Never invent last names, street addresses, or phones.
 - There is no public people-search API. Do not invent list-all, lookup-by-arbitrary-phone, or scrapers.
 - Docs MCP must remain documentation-only — no PII tooling.
+- Product MCP `send_text` is first-person SMS to the signed-in caller's linked phone only. It is not a people-search or introduction tool.
+- Live product tools also include `connection_status`, `list_agent_connections`, and `disconnect_agent`. Read live schemas before calling them. `disconnect_agent` does not revoke this package's OAuth connector tokens.
 
 ## Canonical links
 
@@ -46,9 +48,12 @@ This package’s `mcp.json` points at the product MCP URL for connector hosts. A
 | --- | --- |
 | Home | https://property.bot |
 | Auth contract | https://property.bot/auth.md |
+| Connect an agent | https://property.bot/connect.md |
+| Product MCP card | https://property.bot/.well-known/mcp/product-server-card.json |
 | OpenAPI (public health/info) | https://property.bot/openapi.json |
 | Agent brief | https://property.bot/llms.txt |
 | Privacy | https://property.bot/privacy |
+| Contact | https://property.bot/contact |
 | Developers | https://property.bot/developers |
 | Docs | https://property.bot/docs |
 
