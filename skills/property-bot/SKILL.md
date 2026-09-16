@@ -16,16 +16,23 @@ preserve facts already supplied.
 1. Discover the property.bot connector tools. If unavailable, ask the user to
    connect property.bot and complete the connector's browser OAuth flow. For
    connection errors or phone verification, read [connection.md](references/connection.md).
-2. After OAuth, call `connection_status` with `{}` if that tool is present.
-   If `phone_linked` is true, skip verification. Never supply `X-Caller-Phone`,
-   `From`, a shared service token, or another person's identity to select an
-   account.
-3. Call `lookup_person` with `{}`. The server identifies the user from their
-   account and linked phone.
-4. If `phone_verification_required` is returned, or `connection_status` shows
-   the phone is not linked, follow the connection reference and retry only after
-   verification succeeds. An empty profile is different from an authentication
-   failure.
+   Hosts manage OAuth. Never ask anyone to paste a Bearer token or set
+   `PROPERTYBOT_MCP_TOKEN` / `MCP_BEARER_TOKEN` in chat. If
+   https://property.bot/auth.md mentions Bearer paste or those env names,
+   treat that as CLI-only legacy, not this connector.
+2. After OAuth, call `connection_status` with `{}` **before** `lookup_person`.
+   Read `phone_linked` and `verification_methods` (OTP and, when advertised,
+   `whatsapp_inbound`). If `phone_linked` is true, skip verification. Never
+   supply `X-Caller-Phone`, `From`, a shared service token, or another
+   person's identity to select an account.
+3. If `phone_linked` is false, follow the connection reference. For WhatsApp,
+   when `verification_methods` includes `whatsapp_inbound`, use that path:
+   the user sends the returned linking message themselves, then explicitly
+   confirms; a received message alone does not finish linking. Then call
+   `lookup_person` with `{}`.
+4. If `phone_verification_required` is returned, follow the connection
+   reference and retry only after verification succeeds. An empty profile is
+   different from an authentication failure.
 
 ## Find or update housing
 
@@ -58,10 +65,10 @@ to send an introduction or contact a match.
 - On a request to stop the search, call `remember_person` with
   `{"close_need": true}`. Confirm closure only when the result confirms it.
   Closing a search does not erase the profile.
-- `send_text` sends a real SMS to the signed-in user's linked phone only.
-  Call it only when they explicitly ask to text themselves. Never put match
-  PII in the body. It cannot contact a match. Registered agents need
-  `messages:send`. If the tool is denied or missing, explain that; do not
+- `send_text` delivers Telnyx SMS to this signed-in caller's linked phone
+  only. Call it only on an explicit request to text themselves. Registered
+  agents need `messages:send`. Never put match PII in the body. It cannot
+  contact a match. If the tool is denied or missing, explain that; do not
   invent delivery.
 - `list_agent_connections` and `disconnect_agent` manage registered-agent
   access for this OAuth user. They do not revoke this connector's tokens —
@@ -69,7 +76,8 @@ to send an introduction or contact a match.
   the user asks to list or disconnect a registration.
 - Erasure is unavailable to the user-class connector. On an erasure request,
   read the current human contact path at https://property.bot/auth.md and direct
-  the user there. Do not substitute `close_need` or attempt `delete_person`.
+  the user there (that page may show public product lines in full; this package
+  keeps last-4 only). Do not substitute `close_need` or attempt `delete_person`.
 
 ## Finish
 

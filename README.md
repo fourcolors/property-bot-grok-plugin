@@ -50,6 +50,9 @@ is available to the Bot. There is no public Cursor/Grok listing yet.
 The plugin files are distributed under the [MIT license](LICENSE). This license
 does not cover the hosted property.bot service or its private implementation.
 Marketplace review and signed-in Grok Bot acceptance testing are still pending.
+**H4 submit gate:** do not list on Cursor/Grok until Sterling + Adversary re-run
+this package and a human records signed-in Grok Bot evidence. A Cloud VM cannot
+complete that gate.
 
 ## Try it
 
@@ -58,19 +61,22 @@ Marketplace review and signed-in Grok Bot acceptance testing are still pending.
 - “Change my maximum budget to $1,500.”
 - “I found a place. Close my search.”
 
-Live product MCP schemas are authoritative. First-person tools currently include
-`connection_status`, `lookup_person`, `remember_person`, `find_matches`,
-`send_text`, `start_phone_verification`, `confirm_phone_verification`, plus
-`list_agent_connections` and `disconnect_agent` for this OAuth user managing
-registrations. A phone link is required for profile and match operations. New
-linking sends a real verification and requires secure code entry supported by
-the host; validate that flow before offering this to new users. An already
-linked account can skip linking.
+Live product MCP schemas are authoritative. Do not treat any closed six-tool
+list as complete. The product card currently advertises `connection_status`,
+`lookup_person`, `remember_person`, `find_matches`, `send_text`,
+`start_phone_verification`, `confirm_phone_verification`,
+`list_agent_connections`, and `disconnect_agent`. After OAuth, call
+`connection_status` first and read `phone_linked` plus `verification_methods`
+(including `whatsapp_inbound` when advertised). A phone link is required for
+profile and match operations. New linking is a real verification; the user
+must send any WhatsApp inbound message themselves. An already linked account
+can skip linking.
 
-`send_text` sends a real SMS to the signed-in user's linked phone only. It
-cannot contact a match. Matches are redacted suggestions. The connector cannot
-send introductions, book rooms, or erase a profile. Closing a search is
-available; erasure uses the human contact path.
+`send_text` delivers Telnyx SMS to this signed-in caller's linked phone only.
+Registered agents need `messages:send`. It cannot contact a match. Matches are
+redacted suggestions. The connector cannot send introductions, book rooms, or
+erase a profile. Closing a search is available; erasure uses the human contact
+path.
 
 ## Acceptance checks
 
@@ -87,7 +93,7 @@ Use a dedicated test account and authorized test data for signed-in checks.
 | False lifestyle preference | Preserve `false` without replacing it with an unknown/default value |
 | Another person's phone requested | Do not bind or look up that person |
 | No matches | Say there are none; do not invent people or broaden saved criteria silently |
-| Text themselves | `send_text` may SMS the linked user only after they ask; never include match PII |
+| Text themselves | `send_text` delivers Telnyx SMS to the linked user only after they ask; registered agents need `messages:send`; never include match PII |
 | Text/introduction to a match | Explain unavailable; no claim that a match was contacted |
 | Close versus erase | Close only on request; explain erasure needs the human channel |
 | Disconnect this connector | Host plugin settings; `disconnect_agent` does not revoke OAuth connector tokens |
@@ -105,7 +111,10 @@ do not prove OAuth completion, phone linking, plugin loading, or match execution
 - [Grok Bot team connector infrastructure](https://docs.x.ai/grok-bot/teams-and-enterprises)
 - [Cursor plugin manifest and marketplace reference](https://cursor.com/docs/reference/plugins)
 - [Cursor local plugin development](https://cursor.com/docs/plugins)
-- [property.bot authentication](https://property.bot/auth.md)
+- [property.bot authentication](https://property.bot/auth.md) — hosts use
+  browser OAuth; never paste Bearer tokens or set `PROPERTYBOT_MCP_TOKEN` /
+  `MCP_BEARER_TOKEN` in chat (CLI-only legacy on that page). Full DIDs there
+  are public product lines; this package keeps last-4 only.
 - [Connect an agent](https://property.bot/connect.md)
 - [Report a plugin problem](https://github.com/fourcolors/property-bot-grok-plugin/issues)
 - [Privacy and data handling](https://property.bot/privacy)

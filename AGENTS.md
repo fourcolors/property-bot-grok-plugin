@@ -19,7 +19,9 @@ Conversation is the product. Prefer WhatsApp for people. Voice/SMS is secondary.
 | WhatsApp | …0663 | Primary human path |
 | Voice / SMS (Telnyx) | …1919 | Secondary voice / SMS |
 
-Do not invent full phone numbers, paste other people’s numbers, or invent alternate contact paths. For human contact and erasure, follow [auth.md](https://property.bot/auth.md) and [contact](https://property.bot/contact).
+Do not invent full phone numbers, paste other people’s numbers, or invent alternate contact paths. For human contact and erasure, follow [auth.md](https://property.bot/auth.md) and [contact](https://property.bot/contact). `auth.md` may show public product voice/WhatsApp lines in full; this package keeps last-4 only.
+
+Connector hosts must use host-managed OAuth. Never ask users to paste Bearer tokens or set `PROPERTYBOT_MCP_TOKEN` / `MCP_BEARER_TOKEN` in chat. Treat any Bearer-paste or env-token language on `auth.md` as CLI-only legacy, not this plugin.
 
 ## MCP surfaces (do not collapse them)
 
@@ -39,8 +41,8 @@ This package’s `mcp.json` points at the product MCP URL for connector hosts. A
 - Match cards from product MCP are redacted (city, budget band, side, first name). Never invent last names, street addresses, or phones.
 - There is no public people-search API. Do not invent list-all, lookup-by-arbitrary-phone, or scrapers.
 - Docs MCP must remain documentation-only — no PII tooling.
-- Product MCP `send_text` is first-person SMS to the signed-in caller's linked phone only. It is not a people-search or introduction tool.
-- Live product tools also include `connection_status`, `list_agent_connections`, and `disconnect_agent`. Read live schemas before calling them. `disconnect_agent` does not revoke this package's OAuth connector tokens.
+- Product MCP `send_text` delivers Telnyx SMS to the signed-in caller's linked phone only (`messages:send` for registered agents). It is not a people-search or introduction tool.
+- Live schemas are authoritative. The product card currently lists `connection_status`, `lookup_person`, `remember_person`, `find_matches`, `send_text`, `start_phone_verification`, `confirm_phone_verification`, `list_agent_connections`, and `disconnect_agent`. After OAuth, call `connection_status` first (`phone_linked`, `verification_methods` including `whatsapp_inbound`). `disconnect_agent` does not revoke this package's OAuth connector tokens.
 
 ## Canonical links
 
