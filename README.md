@@ -49,10 +49,10 @@ is available to the Bot. There is no public Cursor/Grok listing yet.
 
 The plugin files are distributed under the [MIT license](LICENSE). This license
 does not cover the hosted property.bot service or its private implementation.
-Marketplace review and signed-in Grok Bot acceptance testing are still pending.
-**H4 submit gate:** do not list on Cursor/Grok until Sterling + Adversary re-run
-this package and a human records signed-in Grok Bot evidence. A Cloud VM cannot
-complete that gate.
+C1/H1–H3 package copy is aligned with live MCP. Marketplace submit stays
+gated on merge of this PR plus the site PR so live matches this tip, and on
+Sterling **H4** signed-in Grok Bot OAuth smoke evidence. A Cloud VM cannot
+complete H4.
 
 ## Try it
 
