@@ -76,8 +76,10 @@ to send an introduction or contact a match.
   the user asks to list or disconnect a registration.
 - Erasure is unavailable to the user-class connector. On an erasure request,
   read the current human contact path at https://property.bot/auth.md and direct
-  the user there (that page may show public product lines in full; this package
-  keeps last-4 only). Do not substitute `close_need` or attempt `delete_person`.
+  the user there (public product lines may appear in full; this package keeps
+  last-4 only). Do not paste Bearer tokens or set `PROPERTYBOT_MCP_TOKEN` /
+  `MCP_BEARER_TOKEN` in chat. Do not substitute `close_need` or attempt
+  `delete_person`.
 
 ## Finish
 

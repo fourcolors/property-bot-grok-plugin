@@ -33,7 +33,7 @@ Connector hosts must use host-managed OAuth. Never ask users to paste Bearer tok
 
 Host-managed OAuth belongs in the client credential store. Never invent shared secrets, API keys, bearer tokens, or trusted-runtime phone headers. Never ask users to paste access tokens into chat.
 
-This package’s `mcp.json` points at the product MCP URL for connector hosts. Authorization discovery and token storage are client-managed (see [auth.md](https://property.bot/auth.md)).
+This package’s `mcp.json` points at the product MCP URL for connector hosts. Authorization discovery and token storage are client-managed (see [auth.md](https://property.bot/auth.md)). Hosts use OAuth in the credential store — never paste a Bearer token or set `PROPERTYBOT_MCP_TOKEN` / `MCP_BEARER_TOKEN` in chat; that auth.md language is CLI-only legacy.
 
 ## Privacy
 
@@ -49,7 +49,7 @@ This package’s `mcp.json` points at the product MCP URL for connector hosts. A
 | Resource | URL |
 | --- | --- |
 | Home | https://property.bot |
-| Auth contract | https://property.bot/auth.md |
+| Auth contract | https://property.bot/auth.md (host OAuth only; Bearer paste / `PROPERTYBOT_MCP_TOKEN` / `MCP_BEARER_TOKEN` are CLI-only legacy; last-4 in this package) |
 | Connect an agent | https://property.bot/connect.md |
 | Product MCP card | https://property.bot/.well-known/mcp/product-server-card.json |
 | OpenAPI (public health/info) | https://property.bot/openapi.json |
