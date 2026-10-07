@@ -1,14 +1,14 @@
 # property.bot plugin for Cursor and Grok Bot
 
-OAuth MCP connector and `/property-bot` skill for [property.bot](https://property.bot): first-person housing and roommate matching in Cursor and Grok Bot. Spoken name: **PropertyBot**. Written brand: **property.bot**.
+<img src="assets/logo.svg" alt="property.bot" width="96" />
 
-This public repo is the plugin package — Cursor/Grok layout, [Agent Plugins](https://agent-plugins.org/specification) discovery (`plugin.json`, `mcp.json`, `skills/`), and [`AGENTS.md`](./AGENTS.md). The property.bot application source is private.
+Connect [property.bot](https://property.bot) in Cursor and Grok Bot for first-person housing and roommate matching. Spoken name: **PropertyBot**. Written brand: **property.bot**.
 
-The package needs no API key, local server, or service credential. Hosts complete WorkOS OAuth against `https://mcp.property.bot/mcp` and store tokens in the client credential store. Never paste a Bearer token or set `PROPERTYBOT_MCP_TOKEN` / `MCP_BEARER_TOKEN` in chat.
+This public repo is the plugin package — Cursor/Grok layout, [Agent Plugins](https://agent-plugins.org/specification) discovery (`plugin.json`, `mcp.json`, `skills/`), and [`AGENTS.md`](./AGENTS.md). The application source is private. Hosts complete WorkOS OAuth against `https://mcp.property.bot/mcp` and store tokens in the client credential store. Never paste a Bearer token or set `PROPERTYBOT_MCP_TOKEN` / `MCP_BEARER_TOKEN` in chat.
 
 ## Status
 
-The package is ready to install locally and to submit to the Cursor marketplace. Marketplace listing and Sterling’s signed-in H4 Grok Bot smoke are remaining human steps, not package-quality blockers.
+The package is ship-ready. H4 signed-in Grok Bot OAuth smoke passed 2026-10-06 (phone linked; `connection_status`, `lookup_person`, `find_matches`). Remaining human step: Cursor marketplace submit (and optional GitHub About/topics admin).
 
 Grok Bot uses Cursor marketplace and account infrastructure. Root `plugin.json` follows the Agent Plugins spec so portable clients discover the same skills and MCP entry. This is not a Grok Build CLI plugin or an xAI Responses API integration.
 
@@ -16,7 +16,7 @@ Files are [MIT](LICENSE) for this package only. That license does not cover the 
 
 ## Connect
 
-Cursor local load, from the plugin root:
+From the plugin root:
 
 ```bash
 mkdir -p ~/.cursor/plugins/local
@@ -36,7 +36,7 @@ For Grok Bot, add the plugin through the marketplace or team flow when a listing
 - “Change my maximum budget to $1,500.”
 - “I found a place. Close my search.”
 
-Live product MCP schemas are authoritative. The [product card](https://property.bot/.well-known/mcp/product-server-card.json) currently lists `connection_status`, `lookup_person`, `remember_person`, `find_matches`, `send_text`, `start_phone_verification`, `confirm_phone_verification`, `list_agent_connections`, and `disconnect_agent`. After OAuth, call `connection_status` first and read `phone_linked` plus `verification_methods` (including `whatsapp_inbound` when advertised). Profile and match tools need a phone link. New linking is a real verification; the user sends any WhatsApp inbound message themselves.
+Live product MCP schemas are authoritative. Hosts may expose additional tools after OAuth — read those schemas instead of relying on a hardcoded list. The [product card](https://property.bot/.well-known/mcp/product-server-card.json) lists `connection_status`, `lookup_person`, `remember_person`, `find_matches`, `send_text`, `start_phone_verification`, `confirm_phone_verification`, `list_agent_connections`, and `disconnect_agent`. After OAuth, call `connection_status` first and read `phone_linked` plus `verification_methods` (including `whatsapp_inbound` when advertised). Profile and match tools need a phone link. New linking is a real verification; the user sends any WhatsApp inbound message themselves.
 
 `send_text` delivers Telnyx SMS to this signed-in caller’s linked phone only (`messages:send` for registered agents). It cannot contact a match. Matches are redacted suggestions. Closing a search is available; erasure uses the [human contact](https://property.bot/contact) path.
 

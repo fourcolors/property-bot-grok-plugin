@@ -30,7 +30,7 @@ This package’s `mcp.json` points at the product MCP URL. Hosts store OAuth tok
 - No public people-search API. Do not invent list-all, lookup-by-arbitrary-phone, or scrapers.
 - Docs MCP stays documentation-only.
 - `send_text` delivers Telnyx SMS to the signed-in caller’s linked phone only (`messages:send` for registered agents). Not an introduction tool.
-- Live schemas are authoritative. Product card tools: `connection_status`, `lookup_person`, `remember_person`, `find_matches`, `send_text`, `start_phone_verification`, `confirm_phone_verification`, `list_agent_connections`, `disconnect_agent`. After OAuth, call `connection_status` first (`phone_linked`, `verification_methods` including `whatsapp_inbound`). `disconnect_agent` does not revoke this package’s OAuth connector tokens.
+- Live schemas are authoritative. The public product card lists `connection_status`, `lookup_person`, `remember_person`, `find_matches`, `send_text`, `start_phone_verification`, `confirm_phone_verification`, `list_agent_connections`, and `disconnect_agent`. Hosts may expose additional tools after OAuth — read live schemas. After OAuth, call `connection_status` first (`phone_linked`, `verification_methods` including `whatsapp_inbound`). `disconnect_agent` does not revoke this package’s OAuth connector tokens.
 
 ## Canonical links
 
