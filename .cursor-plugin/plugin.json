@@ -1,6 +1,6 @@
 {
   "name": "property-bot",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Find rooms or roommates, save housing preferences, and manage your own property.bot profile.",
   "author": {
     "name": "property.bot"
@@ -16,7 +16,7 @@
     "mcp",
     "whatsapp"
   ],
-  "logo": "assets/icon.svg",
+  "logo": "assets/logo.svg",
   "skills": "./skills/",
   "mcpServers": "./mcp.json"
 }

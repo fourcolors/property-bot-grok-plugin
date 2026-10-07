@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2
+
+Official property.bot logo and marketplace-ready copy.
+
+- Replace the placeholder dual-house icon with the official house-"p" mark (white rounded plate, orange accent)
+- Add `assets/logo.svg` and `assets/logo.png`; both manifests set `"logo": "assets/logo.svg"`
+- README and AGENTS: live schemas plus the public product-card tool list
+- H4 signed-in Grok Bot OAuth smoke passed 2026-10-06 (human evidence outside this package)
+- Remaining human step: Cursor marketplace submit (and optional GitHub About/topics admin)
+
 ## 0.1.1
 
 Public property.bot plugin package for Cursor and Grok Bot: host-managed WorkOS OAuth MCP at `https://mcp.property.bot/mcp` and the `/property-bot` housing skill.
